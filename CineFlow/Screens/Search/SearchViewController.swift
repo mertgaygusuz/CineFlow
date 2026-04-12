@@ -37,7 +37,11 @@ final class SearchViewController: UIViewController {
         searchController.searchResultsUpdater              = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder             = "Film ara..."
-        searchController.searchBar.tintColor               = .primaryRed
+        searchController.searchBar.tintColor               = .white   // cancel (X) butonu
+        searchController.searchBar.searchTextField.textColor       = .white
+        searchController.searchBar.searchTextField.tintColor       = .primaryRed  // cursor
+        searchController.searchBar.searchTextField.leftView?.tintColor = .subtitleGray
+        searchController.searchBar.searchTextField.clearButtonMode = .never
         navigationItem.searchController                    = searchController
         navigationItem.hidesSearchBarWhenScrolling         = false
         definesPresentationContext                         = true
