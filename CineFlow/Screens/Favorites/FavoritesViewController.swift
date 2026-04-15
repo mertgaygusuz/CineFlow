@@ -29,15 +29,15 @@ final class FavoritesViewController: UIViewController {
     }
 
     private func setupUI() {
-        title = "Favoriler"
+        title = "tab.favorites".localized
         view.backgroundColor = .darkBackground
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         emptyStateView.configure(image: UIImage(systemName: "heart.slash"),
-                                 title: "Henüz Favori Yok",
-                                 subtitle: "Filmleri favorilere eklemek için kalp ikonuna dokun.")
+                                 title: "favorites.empty.title".localized,
+                                 subtitle: "favorites.empty.subtitle".localized)
         view.addSubview(emptyStateView)
         emptyStateView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
@@ -74,6 +74,6 @@ extension FavoritesViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        "Sil"
+        "common.delete".localized
     }
 }

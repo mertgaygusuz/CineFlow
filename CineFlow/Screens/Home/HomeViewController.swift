@@ -47,8 +47,8 @@ final class HomeViewController: UIViewController {
         loadingView.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         emptyStateView.configure(image: UIImage(systemName: "film"),
-                                 title: "Film Bulunamadı",
-                                 subtitle: "Yaklaşan filmler yüklenemedi.")
+                                 title: "home.empty.title".localized,
+                                 subtitle: "home.empty.subtitle".localized)
         emptyStateView.isHidden = true
         view.addSubview(emptyStateView)
         emptyStateView.snp.makeConstraints { $0.edges.equalToSuperview() }
@@ -78,8 +78,8 @@ final class HomeViewController: UIViewController {
     @objc private func handleRefresh() { viewModel.loadInitialData() }
 
     private func showErrorAlert(_ message: String) {
-        let alert = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+        let alert = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "common.ok".localized, style: .default))
         present(alert, animated: true)
     }
 }

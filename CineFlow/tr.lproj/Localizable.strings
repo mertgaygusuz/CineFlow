@@ -1,0 +1,33 @@
+// Tabs
+"tab.home"      = "Ana Sayfa";
+"tab.search"    = "Arama";
+"tab.favorites" = "Favoriler";
+
+// Common
+"common.error"  = "Hata";
+"common.ok"     = "Tamam";
+"common.delete" = "Sil";
+
+// Home
+"home.empty.title"    = "Film Bulunamadı";
+"home.empty.subtitle" = "Yaklaşan filmler yüklenemedi.";
+
+// Search
+"search.placeholder"       = "Film ara...";
+"search.empty.title"       = "Sonuç Bulunamadı";
+"search.empty.subtitle"    = "Farklı bir anahtar kelime dene.";
+"search.initial.title"     = "Film Ara";
+"search.initial.subtitle"  = "Aramaya başlamak için bir film adı yaz.";
+
+// Favorites
+"favorites.empty.title"    = "Henüz Favori Yok";
+"favorites.empty.subtitle" = "Filmleri favorilere eklemek için kalp ikonuna dokun.";
+
+// Detail
+"detail.trailer" = "Fragman";
+"detail.cast"    = "Oyuncular";
+
+// Network errors
+"error.server"   = "Sunucu hatası: %d";
+"error.decode"   = "Yanıt işlenemedi.";
+"error.internet" = "İnternet bağlantısı yok.";

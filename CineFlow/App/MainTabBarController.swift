@@ -9,9 +9,9 @@ final class MainTabBarController: UITabBarController {
     }
 
     private func setupTabs() {
-        let home      = makeNav(root: HomeViewController(),      title: "Ana Sayfa",  icon: "house",           selectedIcon: "house.fill")
-        let search    = makeNav(root: SearchViewController(),    title: "Arama",      icon: "magnifyingglass", selectedIcon: "magnifyingglass")
-        let favorites = makeNav(root: FavoritesViewController(), title: "Favoriler",  icon: "heart",           selectedIcon: "heart.fill")
+        let home      = makeNav(root: HomeViewController(),      title: "tab.home".localized,      icon: "house",           selectedIcon: "house.fill")
+        let search    = makeNav(root: SearchViewController(),    title: "tab.search".localized,    icon: "magnifyingglass", selectedIcon: "magnifyingglass")
+        let favorites = makeNav(root: FavoritesViewController(), title: "tab.favorites".localized, icon: "heart",           selectedIcon: "heart.fill")
 
         viewControllers = [home, search, favorites]
     }

@@ -3,17 +3,19 @@ import Foundation
 final class DetailViewModel {
 
     // MARK: - Bindings
-    var didUpdateDetail:       ((MovieDetail) -> Void)?
-    var didReceiveError:       ((String)      -> Void)?
-    var isLoading:             ((Bool)        -> Void)?
-    var didUpdateFavoriteStatus: ((Bool)      -> Void)?
+    var didUpdateDetail:         ((MovieDetail)   -> Void)?
+    var didUpdateCredits:        (([CastMember])  -> Void)?
+    var didUpdateTrailer:        ((Video?)        -> Void)?
+    var didReceiveError:         ((String)        -> Void)?
+    var isLoading:               ((Bool)          -> Void)?
+    var didUpdateFavoriteStatus: ((Bool)          -> Void)?
 
     // MARK: - State
     private(set) var movieDetail: MovieDetail?
 
-    private let movieId:         Int
-    private let movieSnapshot:   Movie?
-    private let networkManager:  NetworkManagerProtocol
+    private let movieId:          Int
+    private let movieSnapshot:    Movie?
+    private let networkManager:   NetworkManagerProtocol
     private let favoritesManager: FavoritesManager
 
     // MARK: - Init
@@ -35,11 +37,13 @@ final class DetailViewModel {
     }
 
     // MARK: - Public
-    func loadDetail() {
+    func loadAll() {
         isLoading?(true)
+        let group = DispatchGroup()
+
+        group.enter()
         networkManager.request(.movieDetail(id: movieId)) { [weak self] (result: Result<MovieDetail, NetworkError>) in
             DispatchQueue.main.async {
-                self?.isLoading?(false)
                 switch result {
                 case .success(let detail):
                     self?.movieDetail = detail
@@ -47,7 +51,33 @@ final class DetailViewModel {
                 case .failure(let error):
                     self?.didReceiveError?(error.message)
                 }
+                group.leave()
             }
+        }
+
+        group.enter()
+        networkManager.request(.credits(id: movieId)) { [weak self] (result: Result<CreditsResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                if case .success(let response) = result {
+                    self?.didUpdateCredits?(Array(response.cast.prefix(15)))
+                }
+                group.leave()
+            }
+        }
+
+        group.enter()
+        networkManager.request(.videos(id: movieId)) { [weak self] (result: Result<VideosResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                if case .success(let response) = result {
+                    let trailer = response.results.first { $0.isYouTubeTrailer }
+                    self?.didUpdateTrailer?(trailer)
+                }
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            self?.isLoading?(false)
         }
     }
 

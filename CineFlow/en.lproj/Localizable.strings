@@ -1,0 +1,33 @@
+// Tabs
+"tab.home"      = "Home";
+"tab.search"    = "Search";
+"tab.favorites" = "Favorites";
+
+// Common
+"common.error"  = "Error";
+"common.ok"     = "OK";
+"common.delete" = "Delete";
+
+// Home
+"home.empty.title"    = "No Movies Found";
+"home.empty.subtitle" = "Upcoming movies could not be loaded.";
+
+// Search
+"search.placeholder"       = "Search movies...";
+"search.empty.title"       = "No Results Found";
+"search.empty.subtitle"    = "Try a different keyword.";
+"search.initial.title"     = "Search Movies";
+"search.initial.subtitle"  = "Type a movie name to start searching.";
+
+// Favorites
+"favorites.empty.title"    = "No Favorites Yet";
+"favorites.empty.subtitle" = "Tap the heart icon to add movies to favorites.";
+
+// Detail
+"detail.trailer" = "Trailer";
+"detail.cast"    = "Cast";
+
+// Network errors
+"error.server"   = "Server error: %d";
+"error.decode"   = "Failed to decode response.";
+"error.internet" = "No internet connection.";

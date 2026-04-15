@@ -6,9 +6,9 @@ enum NetworkError: Error {
 
     var message: String {
         switch self {
-        case .serverError(let code): return "Server error: \(code)"
-        case .decodingError:         return "Failed to decode response."
-        case .noInternet:            return "No internet connection."
+        case .serverError(let code): return "error.server".localized(with: code)
+        case .decodingError:         return "error.decode".localized
+        case .noInternet:            return "error.internet".localized
         case .unknown(let msg):      return msg
         }
     }

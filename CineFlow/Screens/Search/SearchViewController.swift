@@ -31,12 +31,12 @@ final class SearchViewController: UIViewController {
 
     // MARK: - Setup
     private func setupUI() {
-        title = "Arama"
+        title = "tab.search".localized
         view.backgroundColor = .darkBackground
 
         searchController.searchResultsUpdater              = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder             = "Film ara..."
+        searchController.searchBar.placeholder             = "search.placeholder".localized
         searchController.searchBar.tintColor               = .white   // cancel (X) butonu
         searchController.searchBar.searchTextField.textColor       = .white
         searchController.searchBar.searchTextField.tintColor       = .primaryRed  // cursor
@@ -71,22 +71,21 @@ final class SearchViewController: UIViewController {
             loading ? self?.loadingView.startAnimating() : self?.loadingView.stopAnimating()
         }
         viewModel.didReceiveError = { [weak self] message in
-            let alert = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+            let alert = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "common.ok".localized, style: .default))
             self?.present(alert, animated: true)
         }
     }
 
     private func showEmptyState(isSearching: Bool) {
         if isSearching {
-            let query = searchController.searchBar.text ?? ""
             emptyStateView.configure(image: UIImage(systemName: "film.slash"),
-                                     title: "Sonuç Bulunamadı",
-                                     subtitle: "\"\(query)\" için film bulunamadı.")
+                                     title: "search.empty.title".localized,
+                                     subtitle: "search.empty.subtitle".localized)
         } else {
             emptyStateView.configure(image: UIImage(systemName: "magnifyingglass"),
-                                     title: "Film Ara",
-                                     subtitle: "Aramaya başlamak için bir film adı yaz.")
+                                     title: "search.initial.title".localized,
+                                     subtitle: "search.initial.subtitle".localized)
         }
     }
 }
