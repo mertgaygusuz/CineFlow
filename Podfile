@@ -8,4 +8,8 @@ target 'CineFlow' do
   pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire', '~> 5.8'
 
+  target 'CineFlowTests' do
+    inherit! :search_paths
+  end
+
 end

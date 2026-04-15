@@ -156,12 +156,18 @@ final class DetailViewController: UIViewController {
     }
 
     private func setupImdbButton() {
-        imdbButton.setTitle("IMDb", for: .normal)
-        imdbButton.setTitleColor(.black, for: .normal)
-        imdbButton.titleLabel?.font   = .systemFont(ofSize: 13, weight: .bold)
-        imdbButton.backgroundColor    = UIColor(red: 245/255, green: 197/255, blue: 24/255, alpha: 1)
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = UIColor(red: 245/255, green: 197/255, blue: 24/255, alpha: 1)
+        config.baseForegroundColor = .black
+        config.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
+        config.attributedTitle = AttributedString(
+            "IMDb",
+            attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 13, weight: .bold)])
+        )
+        config.cornerStyle = .fixed
+        imdbButton.configuration = config
         imdbButton.layer.cornerRadius = 4
-        imdbButton.contentEdgeInsets  = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
+        imdbButton.clipsToBounds = true
         imdbButton.setContentHuggingPriority(.required, for: .horizontal)
         imdbButton.setContentCompressionResistancePriority(.required, for: .horizontal)
         imdbButton.addTarget(self, action: #selector(imdbTapped), for: .touchUpInside)

@@ -8,10 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		3EC5592F0A0054EF70956F27 /* Pods_CineFlow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */; };
+		7F0D603B37D74481C1FE6F5B /* Pods_CineFlowTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9D22EA0E2F901DC9004B4F8F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF237A02F8C1661007159E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DF237A72F8C1661007159E8;
+			remoteInfo = CineFlow;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		26D6487A643B606206057E27 /* Pods-CineFlowTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlowTests.debug.xcconfig"; path = "Target Support Files/Pods-CineFlowTests/Pods-CineFlowTests.debug.xcconfig"; sourceTree = "<group>"; };
 		495CFD3DE095E41FCF474B51 /* Pods-CineFlow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlow.release.xcconfig"; path = "Target Support Files/Pods-CineFlow/Pods-CineFlow.release.xcconfig"; sourceTree = "<group>"; };
+		80E173BA12C58641067B420A /* Pods-CineFlowTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlowTests.release.xcconfig"; path = "Target Support Files/Pods-CineFlowTests/Pods-CineFlowTests.release.xcconfig"; sourceTree = "<group>"; };
+		87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CineFlowTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF237A82F8C1661007159E8 /* CineFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A858AB92DAFDFA07DB3878ED /* Pods-CineFlow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlow.debug.xcconfig"; path = "Target Support Files/Pods-CineFlow/Pods-CineFlow.debug.xcconfig"; sourceTree = "<group>"; };
 		BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CineFlow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -28,6 +43,13 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9D22EA0B2F901DC9004B4F8F /* CineFlowTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = CineFlowTests;
+			sourceTree = "<group>";
+		};
 		9DF237AA2F8C1661007159E8 /* CineFlow */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -39,6 +61,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9D22EA072F901DC9004B4F8F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F0D603B37D74481C1FE6F5B /* Pods_CineFlowTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9DF237A52F8C1661007159E8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -54,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */,
+				87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -63,6 +94,8 @@
 			children = (
 				A858AB92DAFDFA07DB3878ED /* Pods-CineFlow.debug.xcconfig */,
 				495CFD3DE095E41FCF474B51 /* Pods-CineFlow.release.xcconfig */,
+				26D6487A643B606206057E27 /* Pods-CineFlowTests.debug.xcconfig */,
+				80E173BA12C58641067B420A /* Pods-CineFlowTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -71,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				9DF237AA2F8C1661007159E8 /* CineFlow */,
+				9D22EA0B2F901DC9004B4F8F /* CineFlowTests */,
 				9DF237A92F8C1661007159E8 /* Products */,
 				6174CDA1D406291B51ED4464 /* Pods */,
 				52895F863A63202A84834971 /* Frameworks */,
@@ -81,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				9DF237A82F8C1661007159E8 /* CineFlow.app */,
+				9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +123,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9D22EA092F901DC9004B4F8F /* CineFlowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D22EA102F901DC9004B4F8F /* Build configuration list for PBXNativeTarget "CineFlowTests" */;
+			buildPhases = (
+				D973D3010DA44CEE89FE695C /* [CP] Check Pods Manifest.lock */,
+				9D22EA062F901DC9004B4F8F /* Sources */,
+				9D22EA072F901DC9004B4F8F /* Frameworks */,
+				9D22EA082F901DC9004B4F8F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9D22EA0F2F901DC9004B4F8F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9D22EA0B2F901DC9004B4F8F /* CineFlowTests */,
+			);
+			name = CineFlowTests;
+			productName = CineFlowTests;
+			productReference = 9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9DF237A72F8C1661007159E8 /* CineFlow */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DF237BE2F8C1662007159E8 /* Build configuration list for PBXNativeTarget "CineFlow" */;
@@ -120,6 +177,10 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					9D22EA092F901DC9004B4F8F = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 9DF237A72F8C1661007159E8;
+					};
 					9DF237A72F8C1661007159E8 = {
 						CreatedOnToolsVersion = 26.3;
 					};
@@ -141,11 +202,19 @@
 			projectRoot = "";
 			targets = (
 				9DF237A72F8C1661007159E8 /* CineFlow */,
+				9D22EA092F901DC9004B4F8F /* CineFlowTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9D22EA082F901DC9004B4F8F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9DF237A62F8C1661007159E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -186,22 +255,47 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CineFlow/Pods-CineFlow-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CineFlow/Pods-CineFlow-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CineFlow/Pods-CineFlow-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D973D3010DA44CEE89FE695C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CineFlowTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9D22EA062F901DC9004B4F8F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9DF237A42F8C1661007159E8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -211,7 +305,61 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9D22EA0F2F901DC9004B4F8F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9DF237A72F8C1661007159E8 /* CineFlow */;
+			targetProxy = 9D22EA0E2F901DC9004B4F8F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		9D22EA112F901DC9004B4F8F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 26D6487A643B606206057E27 /* Pods-CineFlowTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 368D6M9S9N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mertgaygusuz.CineFlowTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CineFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CineFlow";
+			};
+			name = Debug;
+		};
+		9D22EA122F901DC9004B4F8F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80E173BA12C58641067B420A /* Pods-CineFlowTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 368D6M9S9N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mertgaygusuz.CineFlowTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CineFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CineFlow";
+			};
+			name = Release;
+		};
 		9DF237BF2F8C1662007159E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A858AB92DAFDFA07DB3878ED /* Pods-CineFlow.debug.xcconfig */;
@@ -402,6 +550,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9D22EA102F901DC9004B4F8F /* Build configuration list for PBXNativeTarget "CineFlowTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D22EA112F901DC9004B4F8F /* Debug */,
+				9D22EA122F901DC9004B4F8F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9DF237A32F8C1661007159E8 /* Build configuration list for PBXProject "CineFlow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
