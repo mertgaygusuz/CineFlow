@@ -6,7 +6,7 @@ A movie discovery app built with UIKit that lets users explore now-playing films
 
 | Home | Detail | Search | Favorites |
 |:----:|:------:|:------:|:---------:|
-| ![Home](CineFlow/tree/main/screenshots/home.png) | ![Detail](CineFlow/tree/main/screenshots/detail.png) | ![Search](CineFlow/tree/main/screenshots/search.png) | ![Favorites](CineFlow/tree/main/screenshots/favorites.png) |
+| ![Home](screenshots/home.png) | ![Detail](screenshots/detail.png) | ![Search](screenshots/search.png) | ![Favorites](screenshots/favorites.png) |
 
 ## Features
 
