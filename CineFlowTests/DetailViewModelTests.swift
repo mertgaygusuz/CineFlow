@@ -14,6 +14,12 @@ final class DetailViewModelTests: XCTestCase {
     }
 
     override func tearDown() {
+        sut.didUpdateDetail         = nil
+        sut.didUpdateCredits        = nil
+        sut.didUpdateTrailer        = nil
+        sut.didReceiveError         = nil
+        sut.isLoading               = nil
+        sut.didUpdateFavoriteStatus = nil
         FavoritesManager.shared.removeFavorite(stubMovie)
         sut  = nil
         mock = nil
