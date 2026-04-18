@@ -1,29 +1,27 @@
 import XCTest
 @testable import CineFlow
 
+@MainActor
 final class SearchViewModelTests: XCTestCase {
 
     private var sut: SearchViewModel!
     private var mock: MockNetworkManager!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         mock = MockNetworkManager()
         sut  = SearchViewModel(networkManager: mock)
     }
 
-    override func tearDown() {
-        sut.didUpdateResults = nil
-        sut.didReceiveError  = nil
-        sut.isLoading        = nil
+    override func tearDown() async throws {
         sut  = nil
         mock = nil
-        super.tearDown()
+        try await super.tearDown()
     }
 
     // MARK: - search
 
-    func test_search_withValidQuery_updatesResults() {
+    func test_search_withValidQuery_updatesResults() async {
         let movies = [Movie.stub(id: 1), Movie.stub(id: 2), Movie.stub(id: 3)]
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: movies, page: 1, totalPages: 1)
@@ -37,10 +35,10 @@ final class SearchViewModelTests: XCTestCase {
 
         sut.search(query: "Inception")
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_search_withEmptyQuery_returnsEmptyResultsWithoutNetworkCall() {
+    func test_search_withEmptyQuery_returnsEmptyResultsWithoutNetworkCall() async {
         let exp = expectation(description: "empty results")
         sut.didUpdateResults = { result in
             XCTAssertTrue(result.isEmpty)
@@ -49,24 +47,25 @@ final class SearchViewModelTests: XCTestCase {
 
         sut.search(query: "   ")
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_search_withSameQueryTwice_doesNotMakeSecondNetworkCall() {
+    func test_search_withSameQueryTwice_doesNotMakeSecondNetworkCall() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: [Movie.stub(id: 1)], page: 1, totalPages: 1)
         ))
 
-        var callCount = 0
-        sut.didUpdateResults = { _ in callCount += 1 }
+        let exp = expectation(description: "search done")
+        sut.didUpdateResults = { _ in exp.fulfill() }
 
         sut.search(query: "Batman")
         sut.search(query: "Batman")
 
-        XCTAssertEqual(callCount, 1)
+        await fulfillment(of: [exp], timeout: 1)
+        XCTAssertEqual(mock.requestCount, 1)
     }
 
-    func test_search_networkFailure_callsDidReceiveError() {
+    func test_search_networkFailure_callsDidReceiveError() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.failure(.serverError(500)))
 
         let exp = expectation(description: "error received")
@@ -77,17 +76,17 @@ final class SearchViewModelTests: XCTestCase {
 
         sut.search(query: "Interstellar")
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_search_newQuery_resetsPreviousResults() {
+    func test_search_newQuery_resetsPreviousResults() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: [Movie.stub(id: 1), Movie.stub(id: 2)], page: 1, totalPages: 1)
         ))
         let firstExp = expectation(description: "first search done")
         sut.didUpdateResults = { _ in firstExp.fulfill() }
         sut.search(query: "Marvel")
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: [Movie.stub(id: 99)], page: 1, totalPages: 1)
@@ -100,12 +99,12 @@ final class SearchViewModelTests: XCTestCase {
         }
 
         sut.search(query: "DC")
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // MARK: - fetchNextPage
 
-    func test_fetchNextPage_withMorePages_appendsResults() {
+    func test_fetchNextPage_withMorePages_appendsResults() async {
         let page1 = MovieResponse.stub(results: [Movie.stub(id: 1)], page: 1, totalPages: 2)
         let page2 = MovieResponse.stub(results: [Movie.stub(id: 2), Movie.stub(id: 3)], page: 2, totalPages: 2)
 
@@ -113,7 +112,7 @@ final class SearchViewModelTests: XCTestCase {
         let firstExp = expectation(description: "first page loaded")
         sut.didUpdateResults = { _ in firstExp.fulfill() }
         sut.search(query: "Marvel")
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
         mock.enqueue(Result<MovieResponse, NetworkError>.success(page2))
 
@@ -123,23 +122,24 @@ final class SearchViewModelTests: XCTestCase {
         }
 
         sut.fetchNextPage()
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_fetchNextPage_onLastPage_doesNotFetch() {
+    func test_fetchNextPage_onLastPage_doesNotFetch() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: [Movie.stub(id: 1)], page: 1, totalPages: 1)
         ))
         let firstExp = expectation(description: "search done")
         sut.didUpdateResults = { _ in firstExp.fulfill() }
         sut.search(query: "DC")
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
-        var callCount = 0
-        sut.didUpdateResults = { _ in callCount += 1 }
+        let noFetchExp = expectation(description: "should not fetch")
+        noFetchExp.isInverted = true
+        sut.didUpdateResults = { _ in noFetchExp.fulfill() }
 
         sut.fetchNextPage()
 
-        XCTAssertEqual(callCount, 0)
+        await fulfillment(of: [noFetchExp], timeout: 0.3)
     }
 }

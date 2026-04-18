@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class SearchViewModel {
 
     // MARK: - Bindings
@@ -48,23 +49,25 @@ final class SearchViewModel {
 
     // MARK: - Private
     private func fetch(query: String, page: Int, reset: Bool) {
-        networkManager.request(.search(query: query, page: page)) { [weak self] (result: Result<MovieResponse, NetworkError>) in
-            DispatchQueue.main.async {
-                self?.isLoading?(false)
-                self?.isFetchingMore = false
-                switch result {
-                case .success(let response):
-                    self?.totalPages = response.totalPages
-                    if reset {
-                        self?.movies = response.results
-                    } else {
-                        self?.movies.append(contentsOf: response.results)
-                    }
-                    self?.didUpdateResults?(self?.movies ?? [])
-                case .failure(let error):
-                    self?.didReceiveError?(error.message)
+        Task { [weak self] in
+            guard let self else { return }
+
+            do {
+                let response: MovieResponse = try await networkManager.request(.search(query: query, page: page))
+                totalPages = response.totalPages
+                if reset {
+                    movies = response.results
+                } else {
+                    movies.append(contentsOf: response.results)
                 }
+                didUpdateResults?(movies)
+            } catch let error as NetworkError {
+                didReceiveError?(error.message)
+            } catch {
+                didReceiveError?(error.localizedDescription)
             }
+            isLoading?(false)
+            isFetchingMore = false
         }
     }
 }

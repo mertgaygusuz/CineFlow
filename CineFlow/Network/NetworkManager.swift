@@ -1,9 +1,9 @@
 import Foundation
 import Alamofire
 
-// MARK: - Protocol (abstraction over Alamofire)
+// MARK: - Protocol
 protocol NetworkManagerProtocol {
-    func request<T: Decodable>(_ endpoint: APIEndpoint, completion: @escaping (Result<T, NetworkError>) -> Void)
+    func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T
 }
 
 // MARK: - Implementation
@@ -13,24 +13,26 @@ final class NetworkManager: NetworkManagerProtocol {
 
     private let baseURL = "https://api.themoviedb.org/3"
 
-    func request<T: Decodable>(_ endpoint: APIEndpoint, completion: @escaping (Result<T, NetworkError>) -> Void) {
+    func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T {
         let url = baseURL + endpoint.path
-        AF.request(url, parameters: endpoint.parameters)
-            .validate()
-            .responseDecodable(of: T.self) { response in
-                switch response.result {
-                case .success(let value):
-                    completion(.success(value))
-                case .failure(let error):
-                    if let statusCode = response.response?.statusCode {
-                        completion(.failure(.serverError(statusCode)))
-                    } else if let urlError = error.underlyingError as? URLError,
-                              urlError.code == .notConnectedToInternet {
-                        completion(.failure(.noInternet))
-                    } else {
-                        completion(.failure(.unknown(error.localizedDescription)))
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(url, parameters: endpoint.parameters)
+                .validate()
+                .responseDecodable(of: T.self) { response in
+                    switch response.result {
+                    case .success(let value):
+                        continuation.resume(returning: value)
+                    case .failure(let error):
+                        if let statusCode = response.response?.statusCode {
+                            continuation.resume(throwing: NetworkError.serverError(statusCode))
+                        } else if let urlError = error.underlyingError as? URLError,
+                                  urlError.code == .notConnectedToInternet {
+                            continuation.resume(throwing: NetworkError.noInternet)
+                        } else {
+                            continuation.resume(throwing: NetworkError.unknown(error.localizedDescription))
+                        }
                     }
                 }
-            }
+        }
     }
 }

@@ -1,37 +1,32 @@
 import XCTest
 @testable import CineFlow
 
+@MainActor
 final class DetailViewModelTests: XCTestCase {
 
     private var sut: DetailViewModel!
     private var mock: MockNetworkManager!
     private let stubMovie = Movie.stub(id: 42)
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         mock = MockNetworkManager()
         sut  = DetailViewModel(movieId: 42, movie: stubMovie, networkManager: mock)
     }
 
-    override func tearDown() {
-        sut.didUpdateDetail         = nil
-        sut.didUpdateCredits        = nil
-        sut.didUpdateTrailer        = nil
-        sut.didReceiveError         = nil
-        sut.isLoading               = nil
-        sut.didUpdateFavoriteStatus = nil
+    override func tearDown() async throws {
         FavoritesManager.shared.removeFavorite(stubMovie)
         sut  = nil
         mock = nil
-        super.tearDown()
+        try await super.tearDown()
     }
 
     // MARK: - loadAll
 
-    func test_loadAll_success_callsDidUpdateDetail() {
-        let detail   = MovieDetail.stub(id: 42)
-        let credits  = CreditsResponse(cast: [CastMember.stub()])
-        let videos   = VideosResponse(results: [Video.stub()])
+    func test_loadAll_success_callsDidUpdateDetail() async {
+        let detail  = MovieDetail.stub(id: 42)
+        let credits = CreditsResponse(cast: [CastMember.stub()])
+        let videos  = VideosResponse(results: [Video.stub()])
 
         mock.enqueue(Result<MovieDetail, NetworkError>.success(detail))
         mock.enqueue(Result<CreditsResponse, NetworkError>.success(credits))
@@ -53,10 +48,10 @@ final class DetailViewModelTests: XCTestCase {
 
         sut.loadAll()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [detailExp, creditsExp, trailerExp], timeout: 1)
     }
 
-    func test_loadAll_detailFailure_callsDidReceiveError() {
+    func test_loadAll_detailFailure_callsDidReceiveError() async {
         mock.enqueue(Result<MovieDetail, NetworkError>.failure(.noInternet))
         mock.enqueue(Result<CreditsResponse, NetworkError>.failure(.noInternet))
         mock.enqueue(Result<VideosResponse, NetworkError>.failure(.noInternet))
@@ -69,12 +64,12 @@ final class DetailViewModelTests: XCTestCase {
 
         sut.loadAll()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // MARK: - toggleFavorite
 
-    func test_toggleFavorite_addsToFavorites() {
+    func test_toggleFavorite_addsToFavorites() async {
         let exp = expectation(description: "favorite added")
         sut.didUpdateFavoriteStatus = { isFav in
             XCTAssertTrue(isFav)
@@ -83,11 +78,11 @@ final class DetailViewModelTests: XCTestCase {
 
         sut.toggleFavorite()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
         XCTAssertTrue(FavoritesManager.shared.isFavorite(stubMovie))
     }
 
-    func test_toggleFavorite_removeFromFavorites() {
+    func test_toggleFavorite_removeFromFavorites() async {
         FavoritesManager.shared.toggleFavorite(stubMovie)
 
         let exp = expectation(description: "favorite removed")
@@ -98,11 +93,11 @@ final class DetailViewModelTests: XCTestCase {
 
         sut.toggleFavorite()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
         XCTAssertFalse(FavoritesManager.shared.isFavorite(stubMovie))
     }
 
-    func test_isFavorite_reflectsCurrentState() {
+    func test_isFavorite_reflectsCurrentState() async {
         XCTAssertFalse(sut.isFavorite)
         FavoritesManager.shared.toggleFavorite(stubMovie)
         let sutWithFav = DetailViewModel(movieId: 42, movie: stubMovie, networkManager: mock)

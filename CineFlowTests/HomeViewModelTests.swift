@@ -1,30 +1,27 @@
 import XCTest
 @testable import CineFlow
 
+@MainActor
 final class HomeViewModelTests: XCTestCase {
 
     private var sut: HomeViewModel!
     private var mock: MockNetworkManager!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         mock = MockNetworkManager()
         sut  = HomeViewModel(networkManager: mock)
     }
 
-    override func tearDown() {
-        sut.didUpdateNowPlaying = nil
-        sut.didUpdateUpcoming   = nil
-        sut.didReceiveError     = nil
-        sut.isLoading           = nil
+    override func tearDown() async throws {
         sut  = nil
         mock = nil
-        super.tearDown()
+        try await super.tearDown()
     }
 
     // MARK: - loadInitialData
 
-    func test_loadInitialData_success_updatesNowPlayingAndUpcoming() {
+    func test_loadInitialData_success_updatesNowPlayingAndUpcoming() async {
         let nowPlayingMovies = [Movie.stub(id: 1), Movie.stub(id: 2)]
         let upcomingMovies   = [Movie.stub(id: 3), Movie.stub(id: 4)]
 
@@ -49,10 +46,10 @@ final class HomeViewModelTests: XCTestCase {
 
         sut.loadInitialData()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [nowPlayingExp, upcomingExp], timeout: 1)
     }
 
-    func test_loadInitialData_networkFailure_callsDidReceiveError() {
+    func test_loadInitialData_networkFailure_callsDidReceiveError() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.failure(.noInternet))
         mock.enqueue(Result<MovieResponse, NetworkError>.failure(.noInternet))
 
@@ -65,17 +62,17 @@ final class HomeViewModelTests: XCTestCase {
 
         sut.loadInitialData()
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_loadInitialData_resetsUpcomingMovies() {
+    func test_loadInitialData_resetsUpcomingMovies() async {
         let firstLoad = MovieResponse.stub(results: [Movie.stub(id: 1), Movie.stub(id: 2)], page: 1, totalPages: 1)
         mock.enqueue(Result<MovieResponse, NetworkError>.success(.stub()))
         mock.enqueue(Result<MovieResponse, NetworkError>.success(firstLoad))
         let firstExp = expectation(description: "first load done")
         sut.didUpdateUpcoming = { _ in firstExp.fulfill() }
         sut.loadInitialData()
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
         let secondLoad = MovieResponse.stub(results: [Movie.stub(id: 99)], page: 1, totalPages: 1)
         mock.enqueue(Result<MovieResponse, NetworkError>.success(.stub()))
@@ -88,12 +85,12 @@ final class HomeViewModelTests: XCTestCase {
         }
 
         sut.loadInitialData()
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
     // MARK: - fetchNextPage
 
-    func test_fetchNextPage_appendsToExistingMovies() {
+    func test_fetchNextPage_appendsToExistingMovies() async {
         let page1 = MovieResponse.stub(results: [Movie.stub(id: 1), Movie.stub(id: 2)], page: 1, totalPages: 2)
         let page2 = MovieResponse.stub(results: [Movie.stub(id: 3)], page: 2, totalPages: 2)
 
@@ -102,7 +99,7 @@ final class HomeViewModelTests: XCTestCase {
         let firstExp = expectation(description: "initial load done")
         sut.didUpdateUpcoming = { _ in firstExp.fulfill() }
         sut.loadInitialData()
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
         mock.enqueue(Result<MovieResponse, NetworkError>.success(page2))
 
@@ -112,10 +109,10 @@ final class HomeViewModelTests: XCTestCase {
         }
 
         sut.fetchNextPage()
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_fetchNextPage_onLastPage_doesNotFetch() {
+    func test_fetchNextPage_onLastPage_doesNotFetch() async {
         mock.enqueue(Result<MovieResponse, NetworkError>.success(.stub()))
         mock.enqueue(Result<MovieResponse, NetworkError>.success(
             .stub(results: [Movie.stub(id: 1)], page: 1, totalPages: 1)
@@ -123,13 +120,14 @@ final class HomeViewModelTests: XCTestCase {
         let firstExp = expectation(description: "initial load done")
         sut.didUpdateUpcoming = { _ in firstExp.fulfill() }
         sut.loadInitialData()
-        wait(for: [firstExp], timeout: 1)
+        await fulfillment(of: [firstExp], timeout: 1)
 
-        var callCount = 0
-        sut.didUpdateUpcoming = { _ in callCount += 1 }
+        let noFetchExp = expectation(description: "should not fetch")
+        noFetchExp.isInverted = true
+        sut.didUpdateUpcoming = { _ in noFetchExp.fulfill() }
 
         sut.fetchNextPage()
 
-        XCTAssertEqual(callCount, 0)
+        await fulfillment(of: [noFetchExp], timeout: 0.3)
     }
 }

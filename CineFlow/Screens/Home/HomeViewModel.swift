@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class HomeViewModel {
 
     // MARK: - Bindings
@@ -12,8 +13,8 @@ final class HomeViewModel {
     private(set) var nowPlayingMovies: [Movie] = []
     private(set) var upcomingMovies:   [Movie] = []
 
-    private var currentPage   = 1
-    private var totalPages    = 1
+    private var currentPage    = 1
+    private var totalPages     = 1
     private var isFetchingMore = false
 
     private let networkManager: NetworkManagerProtocol
@@ -28,61 +29,55 @@ final class HomeViewModel {
         isLoading?(true)
         currentPage = 1
 
-        let group = DispatchGroup()
+        Task { [weak self] in
+            guard let self else { return }
 
-        group.enter()
-        fetchNowPlaying { group.leave() }
+            async let nowPlayingResult: MovieResponse = networkManager.request(.nowPlaying(page: 1))
+            async let upcomingResult: MovieResponse   = networkManager.request(.upcoming(page: 1))
 
-        group.enter()
-        fetchUpcoming(page: 1, reset: true) { group.leave() }
+            do {
+                let response = try await nowPlayingResult
+                nowPlayingMovies = response.results
+                didUpdateNowPlaying?(response.results)
+            } catch let error as NetworkError {
+                didReceiveError?(error.message)
+            } catch {
+                didReceiveError?(error.localizedDescription)
+            }
 
-        group.notify(queue: .main) { [weak self] in
-            self?.isLoading?(false)
+            do {
+                let response = try await upcomingResult
+                totalPages     = response.totalPages
+                upcomingMovies = response.results
+                didUpdateUpcoming?(upcomingMovies)
+            } catch let error as NetworkError {
+                didReceiveError?(error.message)
+            } catch {
+                didReceiveError?(error.localizedDescription)
+            }
+
+            isLoading?(false)
         }
     }
 
     func fetchNextPage() {
         guard !isFetchingMore, currentPage < totalPages else { return }
         isFetchingMore = true
-        currentPage += 1
-        fetchUpcoming(page: currentPage, reset: false) { [weak self] in
-            self?.isFetchingMore = false
-        }
-    }
+        currentPage   += 1
 
-    // MARK: - Private
+        Task { [weak self] in
+            guard let self else { return }
+            defer { isFetchingMore = false }
 
-    private func fetchNowPlaying(completion: @escaping () -> Void) {
-        networkManager.request(.nowPlaying(page: 1)) { [weak self] (result: Result<MovieResponse, NetworkError>) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self?.nowPlayingMovies = response.results
-                    self?.didUpdateNowPlaying?(response.results)
-                case .failure(let error):
-                    self?.didReceiveError?(error.message)
-                }
-                completion()
-            }
-        }
-    }
-
-    private func fetchUpcoming(page: Int, reset: Bool, completion: @escaping () -> Void) {
-        networkManager.request(.upcoming(page: page)) { [weak self] (result: Result<MovieResponse, NetworkError>) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self?.totalPages = response.totalPages
-                    if reset {
-                        self?.upcomingMovies = response.results
-                    } else {
-                        self?.upcomingMovies.append(contentsOf: response.results)
-                    }
-                    self?.didUpdateUpcoming?(self?.upcomingMovies ?? [])
-                case .failure(let error):
-                    self?.didReceiveError?(error.message)
-                }
-                completion()
+            do {
+                let response: MovieResponse = try await networkManager.request(.upcoming(page: currentPage))
+                totalPages = response.totalPages
+                upcomingMovies.append(contentsOf: response.results)
+                didUpdateUpcoming?(upcomingMovies)
+            } catch let error as NetworkError {
+                didReceiveError?(error.message)
+            } catch {
+                didReceiveError?(error.localizedDescription)
             }
         }
     }

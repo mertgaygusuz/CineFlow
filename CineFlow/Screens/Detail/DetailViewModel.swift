@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class DetailViewModel {
 
     // MARK: - Bindings
@@ -39,45 +40,34 @@ final class DetailViewModel {
     // MARK: - Public
     func loadAll() {
         isLoading?(true)
-        let group = DispatchGroup()
 
-        group.enter()
-        networkManager.request(.movieDetail(id: movieId)) { [weak self] (result: Result<MovieDetail, NetworkError>) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let detail):
-                    self?.movieDetail = detail
-                    self?.didUpdateDetail?(detail)
-                case .failure(let error):
-                    self?.didReceiveError?(error.message)
-                }
-                group.leave()
+        Task { [weak self] in
+            guard let self else { return }
+
+            async let detailResult: MovieDetail       = networkManager.request(.movieDetail(id: movieId))
+            async let creditsResult: CreditsResponse  = networkManager.request(.credits(id: movieId))
+            async let videosResult: VideosResponse    = networkManager.request(.videos(id: movieId))
+
+            do {
+                let detail = try await detailResult
+                movieDetail = detail
+                didUpdateDetail?(detail)
+            } catch let error as NetworkError {
+                didReceiveError?(error.message)
+            } catch {
+                didReceiveError?(error.localizedDescription)
             }
-        }
 
-        group.enter()
-        networkManager.request(.credits(id: movieId)) { [weak self] (result: Result<CreditsResponse, NetworkError>) in
-            DispatchQueue.main.async {
-                if case .success(let response) = result {
-                    self?.didUpdateCredits?(Array(response.cast.prefix(15)))
-                }
-                group.leave()
+            if let credits = try? await creditsResult {
+                didUpdateCredits?(Array(credits.cast.prefix(15)))
             }
-        }
 
-        group.enter()
-        networkManager.request(.videos(id: movieId)) { [weak self] (result: Result<VideosResponse, NetworkError>) in
-            DispatchQueue.main.async {
-                if case .success(let response) = result {
-                    let trailer = response.results.first { $0.isYouTubeTrailer }
-                    self?.didUpdateTrailer?(trailer)
-                }
-                group.leave()
+            if let videos = try? await videosResult {
+                let trailer = videos.results.first { $0.isYouTubeTrailer }
+                didUpdateTrailer?(trailer)
             }
-        }
 
-        group.notify(queue: .main) { [weak self] in
-            self?.isLoading?(false)
+            isLoading?(false)
         }
     }
 
