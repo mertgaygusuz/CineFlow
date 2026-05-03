@@ -1,38 +1,53 @@
 import Foundation
-import Alamofire
 
-// MARK: - Protocol
 protocol NetworkManagerProtocol {
     func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T
 }
 
-// MARK: - Implementation
 final class NetworkManager: NetworkManagerProtocol {
     static let shared = NetworkManager()
-    private init() {}
 
     private let baseURL = "https://api.themoviedb.org/3"
+    private let session: URLSession
+    private let decoder: JSONDecoder
+
+    init(session: URLSession = .shared, decoder: JSONDecoder = JSONDecoder()) {
+        self.session = session
+        self.decoder = decoder
+    }
 
     func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T {
-        let url = baseURL + endpoint.path
-        return try await withCheckedThrowingContinuation { continuation in
-            AF.request(url, parameters: endpoint.parameters)
-                .validate()
-                .responseDecodable(of: T.self) { response in
-                    switch response.result {
-                    case .success(let value):
-                        continuation.resume(returning: value)
-                    case .failure(let error):
-                        if let statusCode = response.response?.statusCode {
-                            continuation.resume(throwing: NetworkError.serverError(statusCode))
-                        } else if let urlError = error.underlyingError as? URLError,
-                                  urlError.code == .notConnectedToInternet {
-                            continuation.resume(throwing: NetworkError.noInternet)
-                        } else {
-                            continuation.resume(throwing: NetworkError.unknown(error.localizedDescription))
-                        }
-                    }
-                }
+        guard var components = URLComponents(string: baseURL + endpoint.path) else {
+            throw NetworkError.unknown("Invalid URL")
+        }
+        components.queryItems = endpoint.parameters.map { key, value in
+            URLQueryItem(name: key, value: "\(value)")
+        }
+        guard let url = components.url else {
+            throw NetworkError.unknown("Invalid URL")
+        }
+
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(from: url)
+        } catch let error as URLError where error.code == .notConnectedToInternet {
+            throw NetworkError.noInternet
+        } catch {
+            throw NetworkError.unknown(error.localizedDescription)
+        }
+
+        guard let http = response as? HTTPURLResponse else {
+            throw NetworkError.unknown("Invalid response")
+        }
+        guard (200..<300).contains(http.statusCode) else {
+            throw NetworkError.serverError(http.statusCode)
+        }
+
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError
         }
     }
 }

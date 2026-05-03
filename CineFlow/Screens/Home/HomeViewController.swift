@@ -101,7 +101,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = viewModel.upcomingMovies[indexPath.row]
-        navigationController?.pushViewController(DetailViewController(movieId: movie.id, movie: movie), animated: true)
+        navigationController?.pushViewController(DetailScreen.make(movieId: movie.id, movie: movie), animated: true)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -114,6 +114,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - NowPlayingSliderViewDelegate
 extension HomeViewController: NowPlayingSliderViewDelegate {
     func sliderView(_ sliderView: NowPlayingSliderView, didSelectMovie movie: Movie) {
-        navigationController?.pushViewController(DetailViewController(movieId: movie.id, movie: movie), animated: true)
+        navigationController?.pushViewController(DetailScreen.make(movieId: movie.id, movie: movie), animated: true)
     }
 }

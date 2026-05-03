@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		3EC5592F0A0054EF70956F27 /* Pods_CineFlow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */; };
 		7F0D603B37D74481C1FE6F5B /* Pods_CineFlowTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */; };
+		9DC7DF652FA738AB00E94C5A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC7DF642FA738AB00E94C5A /* WidgetKit.framework */; };
+		9DC7DF672FA738AB00E94C5A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC7DF662FA738AB00E94C5A /* SwiftUI.framework */; };
+		9DC7DF762FA738AE00E94C5A /* CineFlowWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9DC7DF632FA738AB00E94C5A /* CineFlowWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,7 +22,28 @@
 			remoteGlobalIDString = 9DF237A72F8C1661007159E8;
 			remoteInfo = CineFlow;
 		};
+		9DC7DF742FA738AE00E94C5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DF237A02F8C1661007159E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DC7DF622FA738AB00E94C5A;
+			remoteInfo = CineFlowWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9DC7DF7B2FA738AE00E94C5A /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9DC7DF762FA738AE00E94C5A /* CineFlowWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		26D6487A643B606206057E27 /* Pods-CineFlowTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlowTests.debug.xcconfig"; path = "Target Support Files/Pods-CineFlowTests/Pods-CineFlowTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -27,12 +51,35 @@
 		80E173BA12C58641067B420A /* Pods-CineFlowTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlowTests.release.xcconfig"; path = "Target Support Files/Pods-CineFlowTests/Pods-CineFlowTests.release.xcconfig"; sourceTree = "<group>"; };
 		87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CineFlowTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DC7DF632FA738AB00E94C5A /* CineFlowWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CineFlowWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DC7DF642FA738AB00E94C5A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9DC7DF662FA738AB00E94C5A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9DF237A82F8C1661007159E8 /* CineFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A858AB92DAFDFA07DB3878ED /* Pods-CineFlow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CineFlow.debug.xcconfig"; path = "Target Support Files/Pods-CineFlow/Pods-CineFlow.debug.xcconfig"; sourceTree = "<group>"; };
 		BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CineFlow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9DC7DF7A2FA738AE00E94C5A /* Exceptions for "CineFlowWidget" folder in "CineFlowWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9DC7DF622FA738AB00E94C5A /* CineFlowWidgetExtension */;
+		};
+		9DC7DF7D2FA73A4D00E94C5A /* Exceptions for "CineFlow" folder in "CineFlowWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Common/Constants/AppConstants.swift,
+				"Common/Extensions/String+Localization.swift",
+				Models/Movie.swift,
+				Models/MovieResponse.swift,
+				Network/APIEndpoint.swift,
+				Network/NetworkError.swift,
+				Network/NetworkManager.swift,
+			);
+			target = 9DC7DF622FA738AB00E94C5A /* CineFlowWidgetExtension */;
+		};
 		9DF237BD2F8C1662007159E8 /* Exceptions for "CineFlow" folder in "CineFlow" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -45,15 +92,22 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9D22EA0B2F901DC9004B4F8F /* CineFlowTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = CineFlowTests;
+			sourceTree = "<group>";
+		};
+		9DC7DF682FA738AB00E94C5A /* CineFlowWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9DC7DF7A2FA738AE00E94C5A /* Exceptions for "CineFlowWidget" folder in "CineFlowWidgetExtension" target */,
+			);
+			path = CineFlowWidget;
 			sourceTree = "<group>";
 		};
 		9DF237AA2F8C1661007159E8 /* CineFlow */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				9DF237BD2F8C1662007159E8 /* Exceptions for "CineFlow" folder in "CineFlow" target */,
+				9DC7DF7D2FA73A4D00E94C5A /* Exceptions for "CineFlow" folder in "CineFlowWidgetExtension" target */,
 			);
 			path = CineFlow;
 			sourceTree = "<group>";
@@ -66,6 +120,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F0D603B37D74481C1FE6F5B /* Pods_CineFlowTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DC7DF602FA738AB00E94C5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DC7DF672FA738AB00E94C5A /* SwiftUI.framework in Frameworks */,
+				9DC7DF652FA738AB00E94C5A /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +148,8 @@
 			children = (
 				BC8FA599A8417DA260B9C967 /* Pods_CineFlow.framework */,
 				87C17C4DC923A91D0C16D8A7 /* Pods_CineFlowTests.framework */,
+				9DC7DF642FA738AB00E94C5A /* WidgetKit.framework */,
+				9DC7DF662FA738AB00E94C5A /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -105,6 +170,7 @@
 			children = (
 				9DF237AA2F8C1661007159E8 /* CineFlow */,
 				9D22EA0B2F901DC9004B4F8F /* CineFlowTests */,
+				9DC7DF682FA738AB00E94C5A /* CineFlowWidget */,
 				9DF237A92F8C1661007159E8 /* Products */,
 				6174CDA1D406291B51ED4464 /* Pods */,
 				52895F863A63202A84834971 /* Frameworks */,
@@ -116,6 +182,7 @@
 			children = (
 				9DF237A82F8C1661007159E8 /* CineFlow.app */,
 				9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */,
+				9DC7DF632FA738AB00E94C5A /* CineFlowWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,6 +212,28 @@
 			productReference = 9D22EA0A2F901DC9004B4F8F /* CineFlowTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		9DC7DF622FA738AB00E94C5A /* CineFlowWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DC7DF772FA738AE00E94C5A /* Build configuration list for PBXNativeTarget "CineFlowWidgetExtension" */;
+			buildPhases = (
+				9DC7DF5F2FA738AB00E94C5A /* Sources */,
+				9DC7DF602FA738AB00E94C5A /* Frameworks */,
+				9DC7DF612FA738AB00E94C5A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9DC7DF682FA738AB00E94C5A /* CineFlowWidget */,
+			);
+			name = CineFlowWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CineFlowWidgetExtension;
+			productReference = 9DC7DF632FA738AB00E94C5A /* CineFlowWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		9DF237A72F8C1661007159E8 /* CineFlow */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DF237BE2F8C1662007159E8 /* Build configuration list for PBXNativeTarget "CineFlow" */;
@@ -154,10 +243,12 @@
 				9DF237A52F8C1661007159E8 /* Frameworks */,
 				9DF237A62F8C1661007159E8 /* Resources */,
 				BA22941ADBA40D7175BEE264 /* [CP] Embed Pods Frameworks */,
+				9DC7DF7B2FA738AE00E94C5A /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9DC7DF752FA738AE00E94C5A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9DF237AA2F8C1661007159E8 /* CineFlow */,
@@ -174,12 +265,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					9D22EA092F901DC9004B4F8F = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 9DF237A72F8C1661007159E8;
+					};
+					9DC7DF622FA738AB00E94C5A = {
+						CreatedOnToolsVersion = 26.4.1;
 					};
 					9DF237A72F8C1661007159E8 = {
 						CreatedOnToolsVersion = 26.3;
@@ -203,12 +297,20 @@
 			targets = (
 				9DF237A72F8C1661007159E8 /* CineFlow */,
 				9D22EA092F901DC9004B4F8F /* CineFlowTests */,
+				9DC7DF622FA738AB00E94C5A /* CineFlowWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9D22EA082F901DC9004B4F8F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DC7DF612FA738AB00E94C5A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,9 +357,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CineFlow/Pods-CineFlow-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CineFlow/Pods-CineFlow-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -296,6 +402,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9DC7DF5F2FA738AB00E94C5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9DF237A42F8C1661007159E8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -310,6 +423,11 @@
 			isa = PBXTargetDependency;
 			target = 9DF237A72F8C1661007159E8 /* CineFlow */;
 			targetProxy = 9D22EA0E2F901DC9004B4F8F /* PBXContainerItemProxy */;
+		};
+		9DC7DF752FA738AE00E94C5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9DC7DF622FA738AB00E94C5A /* CineFlowWidgetExtension */;
+			targetProxy = 9DC7DF742FA738AE00E94C5A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -357,6 +475,70 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CineFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CineFlow";
+			};
+			name = Release;
+		};
+		9DC7DF782FA738AE00E94C5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 368D6M9S9N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CineFlowWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CineFlowWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mertgaygusuz.CineFlow.CineFlowWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9DC7DF792FA738AE00E94C5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 368D6M9S9N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CineFlowWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CineFlowWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mertgaygusuz.CineFlow.CineFlowWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -555,6 +737,15 @@
 			buildConfigurations = (
 				9D22EA112F901DC9004B4F8F /* Debug */,
 				9D22EA122F901DC9004B4F8F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DC7DF772FA738AE00E94C5A /* Build configuration list for PBXNativeTarget "CineFlowWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DC7DF782FA738AE00E94C5A /* Debug */,
+				9DC7DF792FA738AE00E94C5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

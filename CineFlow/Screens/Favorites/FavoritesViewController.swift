@@ -66,7 +66,7 @@ extension FavoritesViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = viewModel.favorites[indexPath.row]
-        navigationController?.pushViewController(DetailViewController(movieId: movie.id, movie: movie), animated: true)
+        navigationController?.pushViewController(DetailScreen.make(movieId: movie.id, movie: movie), animated: true)
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

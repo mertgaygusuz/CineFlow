@@ -1,4 +1,5 @@
 import XCTest
+import SwiftData
 @testable import CineFlow
 
 @MainActor
@@ -6,24 +7,35 @@ final class DetailViewModelTests: XCTestCase {
 
     private var sut: DetailViewModel!
     private var mock: MockNetworkManager!
+    private var favoritesManager: FavoritesManager!
     private let stubMovie = Movie.stub(id: 42)
 
     override func setUp() async throws {
         try await super.setUp()
         mock = MockNetworkManager()
-        sut  = DetailViewModel(movieId: 42, movie: stubMovie, networkManager: mock)
+        let container = try ModelContainer(
+            for: FavoriteMovie.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        favoritesManager = FavoritesManager(container: container)
+        sut = DetailViewModel(
+            movieId: 42,
+            movie: stubMovie,
+            networkManager: mock,
+            favoritesManager: favoritesManager
+        )
     }
 
     override func tearDown() async throws {
-        FavoritesManager.shared.removeFavorite(stubMovie)
-        sut  = nil
+        sut = nil
         mock = nil
+        favoritesManager = nil
         try await super.tearDown()
     }
 
     // MARK: - loadAll
 
-    func test_loadAll_success_callsDidUpdateDetail() async {
+    func test_loadAll_success_publishesDetailCreditsTrailer() async {
         let detail  = MovieDetail.stub(id: 42)
         let credits = CreditsResponse(cast: [CastMember.stub()])
         let videos  = VideosResponse(results: [Video.stub()])
@@ -32,75 +44,56 @@ final class DetailViewModelTests: XCTestCase {
         mock.enqueue(Result<CreditsResponse, NetworkError>.success(credits))
         mock.enqueue(Result<VideosResponse, NetworkError>.success(videos))
 
-        let detailExp  = expectation(description: "detail updated")
-        let creditsExp = expectation(description: "credits updated")
-        let trailerExp = expectation(description: "trailer updated")
+        await sut.loadAll()
 
-        sut.didUpdateDetail  = { _ in detailExp.fulfill() }
-        sut.didUpdateCredits = { cast in
-            XCTAssertEqual(cast.count, 1)
-            creditsExp.fulfill()
-        }
-        sut.didUpdateTrailer = { video in
-            XCTAssertNotNil(video)
-            trailerExp.fulfill()
-        }
-
-        sut.loadAll()
-
-        await fulfillment(of: [detailExp, creditsExp, trailerExp], timeout: 1)
+        XCTAssertEqual(sut.detail?.id, 42)
+        XCTAssertEqual(sut.cast.count, 1)
+        XCTAssertNotNil(sut.trailer)
+        XCTAssertNil(sut.errorMessage)
+        XCTAssertFalse(sut.isLoading)
     }
 
-    func test_loadAll_detailFailure_callsDidReceiveError() async {
+    func test_loadAll_detailFailure_setsErrorMessage() async {
         mock.enqueue(Result<MovieDetail, NetworkError>.failure(.noInternet))
         mock.enqueue(Result<CreditsResponse, NetworkError>.failure(.noInternet))
         mock.enqueue(Result<VideosResponse, NetworkError>.failure(.noInternet))
 
-        let exp = expectation(description: "error received")
-        sut.didReceiveError = { message in
-            XCTAssertFalse(message.isEmpty)
-            exp.fulfill()
-        }
+        await sut.loadAll()
 
-        sut.loadAll()
-
-        await fulfillment(of: [exp], timeout: 1)
+        XCTAssertNotNil(sut.errorMessage)
+        XCTAssertNil(sut.detail)
     }
 
     // MARK: - toggleFavorite
 
-    func test_toggleFavorite_addsToFavorites() async {
-        let exp = expectation(description: "favorite added")
-        sut.didUpdateFavoriteStatus = { isFav in
-            XCTAssertTrue(isFav)
-            exp.fulfill()
-        }
-
-        sut.toggleFavorite()
-
-        await fulfillment(of: [exp], timeout: 1)
-        XCTAssertTrue(FavoritesManager.shared.isFavorite(stubMovie))
-    }
-
-    func test_toggleFavorite_removeFromFavorites() async {
-        FavoritesManager.shared.toggleFavorite(stubMovie)
-
-        let exp = expectation(description: "favorite removed")
-        sut.didUpdateFavoriteStatus = { isFav in
-            XCTAssertFalse(isFav)
-            exp.fulfill()
-        }
-
-        sut.toggleFavorite()
-
-        await fulfillment(of: [exp], timeout: 1)
-        XCTAssertFalse(FavoritesManager.shared.isFavorite(stubMovie))
-    }
-
-    func test_isFavorite_reflectsCurrentState() async {
+    func test_toggleFavorite_addsToFavorites() {
         XCTAssertFalse(sut.isFavorite)
-        FavoritesManager.shared.toggleFavorite(stubMovie)
-        let sutWithFav = DetailViewModel(movieId: 42, movie: stubMovie, networkManager: mock)
-        XCTAssertTrue(sutWithFav.isFavorite)
+        sut.toggleFavorite()
+        XCTAssertTrue(sut.isFavorite)
+        XCTAssertTrue(favoritesManager.isFavorite(stubMovie))
+    }
+
+    func test_toggleFavorite_removesFromFavorites() {
+        favoritesManager.toggleFavorite(stubMovie)
+        let vm = DetailViewModel(
+            movieId: 42, movie: stubMovie,
+            networkManager: mock, favoritesManager: favoritesManager
+        )
+        XCTAssertTrue(vm.isFavorite)
+
+        vm.toggleFavorite()
+
+        XCTAssertFalse(vm.isFavorite)
+        XCTAssertFalse(favoritesManager.isFavorite(stubMovie))
+    }
+
+    func test_isFavorite_reflectsInitialState() {
+        XCTAssertFalse(sut.isFavorite)
+        favoritesManager.toggleFavorite(stubMovie)
+        let vm = DetailViewModel(
+            movieId: 42, movie: stubMovie,
+            networkManager: mock, favoritesManager: favoritesManager
+        )
+        XCTAssertTrue(vm.isFavorite)
     }
 }

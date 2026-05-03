@@ -1,6 +1,10 @@
 # CineFlow
 
-A movie discovery app built with UIKit that lets users explore now-playing films, search the catalogue, watch trailers, browse cast lists, and save favorites — all powered by [The Movie Database (TMDb) API](https://www.themoviedb.org/).
+A movie discovery app that lets users explore now-playing films, search the catalogue, watch trailers, browse cast lists, and save favorites — powered by [The Movie Database (TMDb) API](https://www.themoviedb.org/).
+
+Built with **UIKit + SwiftUI interop**, **async/await**, **SwiftData**, and **MVVM**.
+
+> Requires iOS 17+ and Xcode 15+.
 
 ## Screenshots
 
@@ -12,44 +16,51 @@ A movie discovery app built with UIKit that lets users explore now-playing films
 
 - Now-playing banner with auto-scrolling slider
 - Upcoming movies list with infinite pagination and pull-to-refresh
-- Movie detail: backdrop, rating, runtime, IMDb link, trailer (YouTube), and cast list
+- Movie detail (SwiftUI): backdrop, rating, runtime, IMDb link, trailer (YouTube), and cast list
 - Full-text movie search with debounce and pagination
-- Favorites — persist across sessions via UserDefaults
+- Favorites — persisted with SwiftData (auto-migrates the legacy UserDefaults store)
+- **Home screen widget** (WidgetKit + App Intents) — Now Playing or Upcoming movies, configurable per widget instance, with deep links into the app
 - TR / EN localization — follows device language automatically
 - Empty states and error alerts on every screen
 
 ## Architecture
 
-MVVM with closure-based bindings. Each screen owns a ViewModel that is fully decoupled from UIKit:
+MVVM. The Home, Search, and Favorites screens are programmatic UIKit; the Detail screen is SwiftUI embedded via `UIHostingController`. Networking uses native `URLSession` with `async/await` and `async let` for parallel requests.
 
 ```
-View (UIViewController)
-  │  observes closures (didUpdate*, isLoading, didReceiveError)
+UIKit screens (Home / Search / Favorites)
+  │  closure bindings → ViewModel
   ▼
-ViewModel
-  │  depends on protocol, not concrete type
+ViewModel ──────────────►  @Published / closures
+  │  depends on protocol
   ▼
-NetworkManagerProtocol  ◄──  NetworkManager (Alamofire)
+NetworkManagerProtocol  ◄──  NetworkManager (URLSession + async/await)
                          ◄──  MockNetworkManager (tests)
+
+SwiftUI Detail screen ──►  @StateObject DetailViewModel (ObservableObject)
 ```
 
 Key decisions:
-- **No storyboards** — all layout is programmatic with SnapKit
+- **No storyboards** — UIKit layout is programmatic with SnapKit
+- **UIKit + SwiftUI interop** — `DetailScreen.make(...)` returns a `UIHostingController` so existing UIKit `pushViewController` call sites work unchanged
+- **Native networking, no Alamofire** — `URLSession.data(for:)` + `async let` for parallel detail / credits / trailer requests
 - **Protocol-oriented networking** — `NetworkManagerProtocol` makes every ViewModel unit-testable with a `MockNetworkManager`
-- **DispatchGroup** — detail, cast, and trailer requests run in parallel; loading ends only when all three complete
-- **Kingfisher** behind an `ImageLoader` abstraction — swappable without touching call sites
+- **SwiftData for persistence** — separate `FavoriteMovie @Model` keeps the API DTO (`Movie` struct) decoupled from storage. One-time migration ports any existing UserDefaults favorites on first launch. Tests inject an in-memory `ModelContainer`.
+- **Widget extension** — `AppIntentTimelineProvider` re-uses the main app's `NetworkManager` (shared via Target Membership, no code duplication). `WidgetConfigurationIntent` lets the user pick Now Playing / Upcoming per widget instance. Tap any item → `cineflow://movie/<id>` deep link → app opens the Detail screen.
+- **Kingfisher** for image loading — `ImageLoader` abstraction in UIKit, `KFImage` in SwiftUI
 
 ## Tech Stack
 
 | | |
 |---|---|
 | Language | Swift |
-| UI | UIKit (programmatic, no Storyboard) |
+| UI | UIKit (programmatic) + SwiftUI (Detail screen) |
 | Architecture | MVVM |
-| Networking | Alamofire |
+| Concurrency | async/await, `async let` |
+| Networking | URLSession |
 | Image loading | Kingfisher |
-| Layout | SnapKit |
-| Persistence | UserDefaults |
+| Layout (UIKit) | SnapKit |
+| Persistence | SwiftData |
 | Testing | XCTest + MockNetworkManager |
 | Dependency management | CocoaPods |
 
@@ -62,12 +73,17 @@ CineFlowTests/
 ├── Mocks/
 │   ├── MockNetworkManager.swift
 │   └── TestStubs.swift
-├── HomeViewModelTests.swift      (5 tests)
-├── SearchViewModelTests.swift    (6 tests)
-└── DetailViewModelTests.swift    (5 tests)
+├── HomeViewModelTests.swift
+├── SearchViewModelTests.swift
+└── DetailViewModelTests.swift
 ```
 
 Run tests with `Cmd+U` in Xcode.
+
+## Dependencies
+
+- [SnapKit](https://github.com/SnapKit/SnapKit) — UIKit Auto Layout DSL
+- [Kingfisher](https://github.com/onevcat/Kingfisher) — image downloading & caching (`KFImage` in SwiftUI, `ImageLoader` abstraction in UIKit)
 
 ## Installation
 

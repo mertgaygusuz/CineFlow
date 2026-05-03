@@ -118,7 +118,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = viewModel.movies[indexPath.row]
-        navigationController?.pushViewController(DetailViewController(movieId: movie.id, movie: movie), animated: true)
+        navigationController?.pushViewController(DetailScreen.make(movieId: movie.id, movie: movie), animated: true)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
